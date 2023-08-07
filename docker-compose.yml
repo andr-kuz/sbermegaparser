@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  firefox:
+    image: selenium/standalone-firefox:116.0
+    container_name: firefox
+    # environment:
+    #   - SE_OPTS=--session-request-timeout=10
+    ports:
+      - '4444:4444'
+
+  app:
+    build: .
+    container_name: 'sberparser'
+    volumes:
+      - .:/home/app
+    tty: true
+    depends_on:
+      - firefox
