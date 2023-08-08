@@ -9,8 +9,8 @@ def main(urls: list):
     scraper = SberScraper(driver.driver)
     result = '['
     for url in urls:
-        data = scraper.get_product(url.strip())
-        result += json.dumps(str(data)) + ','
+        if data := scraper.get_product(url.strip()):
+            result += json.dumps(str(data)) + ','
     result = result[:-1] + ']'
     print(result)
 
