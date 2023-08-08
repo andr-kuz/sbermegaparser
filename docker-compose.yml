@@ -8,12 +8,14 @@ services:
     #   - SE_OPTS=--session-request-timeout=10
     ports:
       - '4444:4444'
+    restart: always
 
   app:
     build: .
     container_name: 'sberparser'
     volumes:
       - .:/home/app
+    restart: always
     tty: true
     depends_on:
       - firefox
