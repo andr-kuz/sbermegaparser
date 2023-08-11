@@ -7,11 +7,11 @@ import json
 def main(urls: list):
     driver = SeleniumDriver()
     scraper = SberScraper(driver.driver)
-    result = '['
+    result = '{'
     for url in urls:
         if data := scraper.get_product(url.strip()):
-            result += json.dumps(str(data)) + ','
-    result = result[:-1] + ']'
+           result += '"' + url.strip() + '":' + json.dumps(str(data)) + ','
+    result = result[:-1] + '}'
     print(result)
 
 if __name__ == '__main__':
