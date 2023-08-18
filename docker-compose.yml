@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   firefox:
-    image: selenium/standalone-firefox:116.0
+    image: selenium/standalone-firefox:110.0
     container_name: firefox
     # environment:
     #   - SE_OPTS=--session-request-timeout=10
@@ -13,6 +13,8 @@ services:
   app:
     build: .
     container_name: 'sberparser'
+    ports:
+      - 8087:8087
     volumes:
       - .:/home/app
     restart: always
