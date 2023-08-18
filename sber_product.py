@@ -16,10 +16,8 @@ class SberProduct:
 
     def get_price(self, raw = False) -> int | str | None:
         result = None
-        if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final'):
-            result = element.get_text().strip()
-            if not raw and result:
-                result = int(result.split(' ')[0])
+        if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final meta[itemprop="price"]'):
+            result = element.get('content')
         return result
 
     def get_url(self) -> str | None:
