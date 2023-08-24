@@ -3,6 +3,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from urllib.parse import quote
+import os
 
 class Client:
     def __init__(self, driver: WebDriver):
@@ -14,4 +16,9 @@ class Client:
             WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR,'.header-logo'))).text
         except TimeoutException:
             pass
+        html = self.driver.page_source
+        name = quote(url, '')
+        path = os.path.abspath(os.path.dirname(__file__))
+        with open(path + os.sep + 'temp' + os.sep + name + '.html', 'w') as f:
+            f.write(html)
         return self.driver.page_source
