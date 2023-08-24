@@ -17,7 +17,7 @@ class Client:
         except TimeoutException:
             pass
         html = self.driver.page_source
-        name = quote(url, '')
+        name = quote(url, '')[-100:]
         path = os.path.abspath(os.path.dirname(__file__))
         with open(path + os.sep + 'temp' + os.sep + name + '.html', 'w') as f:
             f.write(html)
