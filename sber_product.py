@@ -14,7 +14,7 @@ class SberProduct:
             'shop_name': self.get_shop_name(),
         })
 
-    def get_price(self, raw = False) -> int | str | None:
+    def get_price(self) -> str | None:
         result = None
         if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final meta[itemprop="price"]'):
             result = element.get('content')
@@ -24,15 +24,15 @@ class SberProduct:
         if element := self.soup.select_one('meta[itemprop="url"]'):
             return 'https://megamarket.ru' + str(element.attrs.get('content'))
 
-    def get_cashback_percent(self, raw = False) -> int | str | None:
+    def get_cashback_percent(self) -> str | None:
         result = None
         if element := self.soup.select_one('.pdp-sales-block__bonus_active .bonus-percent'):
             result = element.get_text().strip()
-            if not raw and result:
-                result = int(result.split('%')[0])
+            if result:
+                result = result.split('%')[0]
         return result
 
-    def get_shop_name(self, raw = False) -> int | str | None:
+    def get_shop_name(self) -> str | None:
         result = None
         if element := self.soup.select_one('.pdp-offer-block__merchant-link'):
             if result := element.get_text().strip():
