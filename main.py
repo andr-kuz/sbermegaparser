@@ -5,7 +5,7 @@ import argparse
 
 
 def main(urls: list, pause: int = 0, proxy: str = ''):
-    driver = SeleniumDriver(proxy)
+    driver = SeleniumDriver('firefox', proxy)
     scraper = SberScraper(driver.driver)
     for url in urls:
         url = url.strip()
