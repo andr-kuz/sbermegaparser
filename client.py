@@ -10,12 +10,12 @@ class Client:
     def __init__(self, driver: WebDriver):
         self.driver = driver
 
-    def get(self, url: str):
-        self.driver.get(url)
+    def get(self, url: str) -> str:
         try:
+            self.driver.get(url)
             WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR,'.header-logo'))).text
         except TimeoutException:
-            pass
+            return ''
         html = self.driver.page_source
         name = quote(url, '')[-100:]
         path = os.path.abspath(os.path.dirname(__file__))

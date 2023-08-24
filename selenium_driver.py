@@ -6,6 +6,7 @@ class SeleniumDriver:
             self.driver = self.init_firefox(proxy_address)
         else:
             self.driver = self.init_chrome(proxy_address)
+        self.driver.set_page_load_timeout(30)
         # debug ip
         # from selenium.webdriver.common.by import By
         # self.driver.get('https://2ip.ru')
@@ -15,6 +16,9 @@ class SeleniumDriver:
         options = webdriver.FirefoxOptions()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
+        profile = webdriver.FirefoxProfile()
+        # profile.set_preference('security.tls.version.enable-deprecated', False)
+        profile.DEFAULT_PREFERENCES['frozen']['security.tls.version.enable-deprecated'] = False
         sw_options = {
             'auto_config': False,
             'addr': 'sberparser',
@@ -29,7 +33,7 @@ class SeleniumDriver:
                 'http': proxy_address,
                 'https': proxy_address,
             }
-        return webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options)
+        return webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, browser_profile=profile)
 
     def init_chrome(self, proxy_address: str):
         options = webdriver.ChromeOptions()
