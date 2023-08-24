@@ -1,4 +1,4 @@
-import sys
+from utils import count_process
 from sber_scraper import SberScraper
 from selenium_driver import SeleniumDriver
 import json
@@ -42,4 +42,5 @@ if __name__ == '__main__':
     if args.f:
         with open(args.f) as file:
             urls = list(file)
-    main(urls, args.p, args.proxy)
+    if count_process(__file__) == 1:
+        main(urls, args.p, args.proxy)
