@@ -34,7 +34,8 @@ class SberProduct:
 
     def get_shop_name(self) -> str | None:
         result = None
-        if element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
-            if result := element.get_text().strip():
-                return result
+        if element := self.soup.select_one('.pdp-offer-block__merchant-link'):
+            result = element.get_text().strip()
+        elif element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
+            result = element.get_text().strip()
         return result
