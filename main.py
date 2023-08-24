@@ -1,21 +1,19 @@
 from utils import count_process
 from sber_scraper import SberScraper
 from selenium_driver import SeleniumDriver
-import json
 import argparse
 
 
 def main(urls: list, pause: int = 0, proxy: str = ''):
     driver = SeleniumDriver(proxy)
     scraper = SberScraper(driver.driver)
-    result = '{'
     for url in urls:
         url = url.strip()
+        result = {}
         if data := scraper.get_product(url):
-           result += '"' + url + '":' + json.dumps(str(data)) + ','
-           driver.driver.implicitly_wait(pause)
-    result = result[:-1] + '}'
-    print(result)
+            result = '{"' + url + '":' + str(data) + '}'
+            print(result, flush=True)
+        driver.driver.implicitly_wait(pause)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape data from sbermegamarket products')
