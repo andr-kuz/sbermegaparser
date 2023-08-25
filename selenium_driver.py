@@ -1,17 +1,9 @@
 from seleniumwire import webdriver
 from selenium.webdriver.common.by import By
-import sys
 
 class SeleniumDriver:
-    def __init__(self, proxy_address = '', test = False):
+    def __init__(self, proxy_address = ''):
         self.driver = self.init_driver(proxy_address)
-        if test:
-            self.driver.get('https://2ip.ru')
-            print('IP:', self.driver.find_element(By.CSS_SELECTOR, '#d_clip_button').text)
-            self.driver.get('https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html')
-            print('')
-            print(self.driver.page_source)
-            sys.exit()
 
     def init_driver(self, proxy_address: str):
         caps = webdriver.DesiredCapabilities().FIREFOX
@@ -40,9 +32,19 @@ class SeleniumDriver:
 
         return driver
 
+    def test(self):
+        self.driver.get('https://2ip.ru')
+        print('IP:', self.driver.find_element(By.CSS_SELECTOR, '#d_clip_button').text)
+        self.driver.get('https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html')
+        print('')
+        print(self.driver.page_source)
+
+    def destroy(self):
+        if hasattr(self, 'driver'):
+            self.driver.quit()
+
     def __repr__(self):
         return self.driver
 
     def __del__(self):
-        if hasattr(self, 'driver'):
-            self.driver.quit()
+        self.destroy()
