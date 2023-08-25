@@ -16,7 +16,7 @@ def main(urls: list, pause: int = 0, proxy: str = ''):
         except ClientStalledException:
             print('stalled')
             break
-        result = '{"' + url + '":' + product.as_string() + '}'
+        result = '{"' + url + '":' + product.as_json() + '}'
         print(result, flush=True)
         driver.driver.implicitly_wait(pause)
 

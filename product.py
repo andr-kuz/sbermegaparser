@@ -1,19 +1,20 @@
 from bs4 import BeautifulSoup
+import json
 
 class Product:
     def __init__(self, html: str):
         self.html = html
         self.soup = BeautifulSoup(self.html, 'html.parser')
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         return {
             'price': self.get_price(),
             'cashback_percent': self.get_cashback_percent(),
             'shop_name': self.get_shop_name(),
         }
 
-    def as_string(self):
-        return str(self.as_dict()).replace('\'', '"')
+    def as_json(self) -> str:
+        return json.dumps(self.as_dict())
 
     def get_price(self) -> int | None:
         result = None
