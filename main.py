@@ -4,8 +4,8 @@ from selenium_driver import SeleniumDriver
 import argparse
 
 
-def main(urls: list, pause: int = 0, proxy: str = '', browser: str = 'firefox'):
-    driver = SeleniumDriver(browser, proxy)
+def main(urls: list, pause: int = 0, proxy: str = ''):
+    driver = SeleniumDriver(proxy)
     scraper = SberScraper(driver.driver)
     for url in urls:
         url = url.strip()
@@ -34,12 +34,6 @@ if __name__ == '__main__':
         default='',
         help='provide proxy (like: socks5://username:password@host:port)'
     )
-    parser.add_argument(
-        '-b',
-        type=str,
-        default='firefox',
-        help='provide browser name: "firefox" or "chrome" (default firefox)'
-    )
     args = parser.parse_args()
     pause = args.p
     urls = []
@@ -47,4 +41,4 @@ if __name__ == '__main__':
         with open(args.f) as file:
             urls = list(file)
     if count_process(__file__) == 1:
-        main(urls, args.p, args.proxy, args.b)
+        main(urls, args.p, args.proxy)
