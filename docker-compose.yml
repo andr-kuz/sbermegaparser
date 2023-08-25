@@ -1,13 +1,6 @@
 version: '3.8'
 
 services:
-  chrome:
-    image: selenium/standalone-chrome:112.0
-    container_name: chrome
-    ports:
-      - '4444:4444'
-    restart: always
-
   firefox:
     image: selenium/standalone-firefox:110.0
     container_name: firefox
@@ -25,5 +18,4 @@ services:
     restart: always
     tty: true
     depends_on:
-      - chrome
       - firefox
