@@ -1,24 +1,17 @@
 from utils import count_process
-from selenium_client import SeleniumClient
-from selenium_driver import SeleniumDriver
-from client import ClientStalledException
+from selenium_fabrique import SeleniumFabrique
 import argparse
 
 
-def main(urls: list, pause: int = 0, proxy: str = ''):
-    driver = SeleniumDriver(proxy)
-    client = SeleniumClient(driver.driver)
+def main(urls: list, proxies: list, pause: int = 0):
+    fabrique = SeleniumFabrique(proxies)
     for url in urls:
         url = url.strip()
         result = {}
-        try:
-            product = client.get_product(url)
-        except ClientStalledException:
-            print('stalled')
-            break
+        product = fabrique.run('get_product', url)
         result = '{"' + url + '":' + product.as_json() + '}'
         print(result, flush=True)
-        driver.driver.implicitly_wait(pause)
+        fabrique.run('sleep', pause)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape data from sbermegamarket products')
@@ -34,10 +27,10 @@ if __name__ == '__main__':
         help='provide pause time between urls (default: 5)'
     )
     parser.add_argument(
-        '--proxy',
+        '--proxies',
         type=str,
         default='',
-        help='provide proxy (like: socks5://username:password@host:port)'
+        help='provide path to file with proxies list'
     )
     args = parser.parse_args()
     pause = args.p
@@ -45,5 +38,9 @@ if __name__ == '__main__':
     if args.f:
         with open(args.f) as file:
             urls = list(file)
+    proxies = []
+    if args.proxies:
+        with open(args.proxies) as file:
+            proxies = list(file)
     if count_process(__file__) == 1:
-        main(urls, args.p, args.proxy)
+        main(urls, proxies, args.p)
