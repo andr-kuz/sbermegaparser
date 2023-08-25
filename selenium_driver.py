@@ -1,64 +1,44 @@
 from seleniumwire import webdriver
+from selenium.webdriver.common.by import By
+import sys
 
 class SeleniumDriver:
-    def __init__(self, driver = 'firefox', proxy_address = ''):
-        if driver == 'firefox':
-            self.driver = self.init_firefox(proxy_address)
-        else:
-            self.driver = self.init_chrome(proxy_address)
-        self.driver.set_page_load_timeout(30)
-        # # debug ip
-        # from selenium.webdriver.common.by import By
-        # import sys
-        # self.driver.get('https://2ip.ru')
-        # print(self.driver.find_element(By.CSS_SELECTOR, '#d_clip_button').text)
-        # sys.exit()
+    def __init__(self, proxy_address = '', test = False):
+        self.driver = self.init_driver(proxy_address)
+        if test:
+            self.driver.get('https://2ip.ru')
+            print('IP:', self.driver.find_element(By.CSS_SELECTOR, '#d_clip_button').text)
+            self.driver.get('https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html')
+            print('')
+            print(self.driver.page_source)
+            sys.exit()
 
-    def init_firefox(self, proxy_address: str):
+    def init_driver(self, proxy_address: str):
+        caps = webdriver.DesiredCapabilities().FIREFOX
+        caps["pageLoadStrategy"] = "eager"
+
         options = webdriver.FirefoxOptions()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
-        profile = webdriver.FirefoxProfile()
-        # profile.set_preference('security.tls.version.enable-deprecated', False)
-        profile.DEFAULT_PREFERENCES['frozen']['security.tls.version.enable-deprecated'] = False
         sw_options = {
             'auto_config': False,
             'addr': 'sberparser',
             'port': 8087,
+            'proxy': {
+                'http': proxy_address,
+                'https': proxy_address,
+            }
         }
+
         proxy = webdriver.Proxy()
         proxy.http_proxy = 'sberparser:8087'
         proxy.ssl_proxy = 'sberparser:8087'
         options.proxy = proxy
-        if proxy_address:
-            sw_options['proxy'] = {
-                'http': proxy_address,
-                'https': proxy_address,
-            }
-        return webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, browser_profile=profile)
 
-    def init_chrome(self, proxy_address: str):
-        options = webdriver.ChromeOptions()
-        sw_options = {
-            'auto_config': False,
-            'addr': 'sberparser',
-            'port': 8087,
-        }
-        if proxy_address:
-            sw_options['proxy'] = {
-                'http': proxy_address,
-                'https': proxy_address,
-            }
-        options.add_argument("enable-automation")
-        options.add_argument("--headless")
-        options.add_argument("--window-size=1920,768")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--dns-prefetch-disable")
-        options.add_argument("--ignore-certificate-errors")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--proxy-server=sberparser:8087")
-        return webdriver.Remote("http://chrome:4444/wd/hub", options=options, seleniumwire_options=sw_options)
+        driver = webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, desired_capabilities=caps)
+        driver.set_page_load_timeout(30)
+
+        return driver
 
     def __repr__(self):
         return self.driver
