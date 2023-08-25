@@ -9,7 +9,10 @@ services:
     restart: always
 
   app:
-    build: .
+    build:
+      context: .
+      shm_size: "2gb"
+    shm_size: "2gb"
     container_name: 'sberparser'
     ports:
       - 8087:8087
