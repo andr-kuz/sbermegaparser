@@ -1,18 +1,17 @@
 from bs4 import BeautifulSoup
-import json
 
 class Product:
     def __init__(self, html: str):
         self.html = html
         self.soup = BeautifulSoup(self.html, 'html.parser')
 
-    def __str__(self):
-        return json.dumps({
+    def __dict__(self):
+        return {
             'url': self.get_url(),
             'price': self.get_price(),
             'cashback_percent': self.get_cashback_percent(),
             'shop_name': self.get_shop_name(),
-        })
+        }
 
     def get_price(self) -> str | None:
         result = None
