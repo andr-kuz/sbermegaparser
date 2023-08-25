@@ -7,10 +7,12 @@ class SeleniumDriver:
         else:
             self.driver = self.init_chrome(proxy_address)
         self.driver.set_page_load_timeout(30)
-        # debug ip
+        # # debug ip
         # from selenium.webdriver.common.by import By
+        # import sys
         # self.driver.get('https://2ip.ru')
         # print(self.driver.find_element(By.CSS_SELECTOR, '#d_clip_button').text)
+        # sys.exit()
 
     def init_firefox(self, proxy_address: str):
         options = webdriver.FirefoxOptions()
