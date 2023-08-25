@@ -1,6 +1,7 @@
 from utils import count_process
 from selenium_client import SeleniumClient
 from selenium_driver import SeleniumDriver
+from client import ClientStalledException
 import argparse
 
 
@@ -10,9 +11,13 @@ def main(urls: list, pause: int = 0, proxy: str = ''):
     for url in urls:
         url = url.strip()
         result = {}
-        if product := client.get_product(url):
-            result = '{"' + url + '":' + product.as_string() + '}'
-            print(result, flush=True)
+        try:
+            product = client.get_product(url)
+        except ClientStalledException:
+            print('stalled')
+            break
+        result = '{"' + url + '":' + product.as_string() + '}'
+        print(result, flush=True)
         driver.driver.implicitly_wait(pause)
 
 if __name__ == '__main__':

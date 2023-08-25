@@ -15,22 +15,20 @@ class Product:
     def as_string(self):
         return str(self.as_dict()).replace('\'', '"')
 
-    def get_price(self) -> str | None:
+    def get_price(self) -> int | None:
         result = None
         if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final meta[itemprop="price"]'):
-            result = element.get('content')
+            result = int(element.get('content'))
         return result
 
     def get_url(self) -> str | None:
         if element := self.soup.select_one('meta[itemprop="url"]'):
             return 'https://megamarket.ru' + str(element.attrs.get('content'))
 
-    def get_cashback_percent(self) -> str | None:
+    def get_cashback_percent(self) -> int | None:
         result = None
         if element := self.soup.select_one('.pdp-sales-block__bonus_active .bonus-percent'):
-            result = element.get_text().strip()
-            if result:
-                result = result.split('%')[0]
+            result = element.get_text().strip().split('%')[0]
         return result
 
     def get_shop_name(self) -> str | None:
