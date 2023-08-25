@@ -1,16 +1,16 @@
 from client import Client
-from sber_product import SberProduct
+from product import Product
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 
-class SberScraper:
+class Scraper:
     def __init__(self, client: WebDriver):
         self.client = Client(client)
         self.url_cache = {}
 
-    def get_product(self, url) -> SberProduct:
+    def get_product(self, url) -> Product:
         if not self.url_cache.get(url):
             html = self.client.get(url)
-            product = SberProduct(html)
+            product = Product(html)
             self.url_cache[url] = product
         return self.url_cache[url]

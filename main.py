@@ -1,12 +1,12 @@
 from utils import count_process
-from sber_scraper import SberScraper
+from scraper import Scraper
 from selenium_driver import SeleniumDriver
 import argparse
 
 
 def main(urls: list, pause: int = 0, proxy: str = ''):
     driver = SeleniumDriver(proxy)
-    scraper = SberScraper(driver.driver)
+    scraper = Scraper(driver.driver)
     for url in urls:
         url = url.strip()
         result = {}

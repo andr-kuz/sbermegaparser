@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import json
 
-class SberProduct:
+class Product:
     def __init__(self, html: str):
         self.html = html
         self.soup = BeautifulSoup(self.html, 'html.parser')
