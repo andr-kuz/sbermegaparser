@@ -5,13 +5,15 @@ class Product:
         self.html = html
         self.soup = BeautifulSoup(self.html, 'html.parser')
 
-    def __dict__(self):
+    def as_dict(self):
         return {
-            'url': self.get_url(),
             'price': self.get_price(),
             'cashback_percent': self.get_cashback_percent(),
             'shop_name': self.get_shop_name(),
         }
+
+    def as_string(self):
+        return str(self.as_dict()).replace('\'', '"')
 
     def get_price(self) -> str | None:
         result = None

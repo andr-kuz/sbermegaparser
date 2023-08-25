@@ -1,17 +1,17 @@
 from utils import count_process
-from scraper import Scraper
+from selenium_client import SeleniumClient
 from selenium_driver import SeleniumDriver
 import argparse
 
 
 def main(urls: list, pause: int = 0, proxy: str = ''):
     driver = SeleniumDriver(proxy)
-    scraper = Scraper(driver.driver)
+    client = SeleniumClient(driver.driver)
     for url in urls:
         url = url.strip()
         result = {}
-        if data := scraper.get_product(url):
-            result = '{"' + url + '":' + str(data) + '}'
+        if product := client.get_product(url):
+            result = '{"' + url + '":' + product.as_string() + '}'
             print(result, flush=True)
         driver.driver.implicitly_wait(pause)
 
