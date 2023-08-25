@@ -29,7 +29,7 @@ class Product:
     def get_cashback_percent(self) -> int | None:
         result = None
         if element := self.soup.select_one('.pdp-sales-block__bonus_active .bonus-percent'):
-            result = element.get_text().strip().split('%')[0]
+            result = int(element.get_text().strip().split('%')[0])
         return result
 
     def get_shop_name(self) -> str | None:
