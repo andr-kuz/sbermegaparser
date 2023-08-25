@@ -36,3 +36,10 @@ class Client:
         path = os.path.abspath(os.path.dirname(__file__))
         with open(path + os.sep + 'temp' + os.sep + name + '.html', 'w') as f:
             f.write(html)
+
+    @abstractmethod
+    def destroy(self):
+        pass
+
+    def __del__(self):
+        self.destroy()

@@ -39,12 +39,5 @@ class SeleniumDriver:
         print('')
         print(self.driver.page_source)
 
-    def destroy(self):
-        if hasattr(self, 'driver'):
-            self.driver.quit()
-
     def __repr__(self):
         return self.driver
-
-    def __del__(self):
-        self.destroy()
