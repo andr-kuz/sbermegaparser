@@ -2,7 +2,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.common.exceptions import TimeoutException
 from client import Client
 
 
@@ -18,8 +18,8 @@ class SeleniumClient(Client):
             pass
         return self.driver.page_source
 
-    def __del__(self):
-        self.destroy()
-
     def destroy(self):
-        self.driver.quit()
+        try:
+            self.driver.quit()
+        except Exception:
+            pass

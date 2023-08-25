@@ -2,6 +2,7 @@ from abc import abstractmethod
 from urllib.parse import quote
 from product import Product
 import os
+import time
 
 class ClientStalledException(Exception):
     def __init__(self):
@@ -36,6 +37,9 @@ class Client:
         path = os.path.abspath(os.path.dirname(__file__))
         with open(path + os.sep + 'temp' + os.sep + name + '.html', 'w') as f:
             f.write(html)
+
+    def sleep(self, pause: int | float):
+        time.sleep(pause)
 
     @abstractmethod
     def destroy(self):
