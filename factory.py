@@ -1,5 +1,4 @@
 from typing import Type
-from abc import abstractmethod
 from client import Client
 from client import ClientStalledException
 import time
