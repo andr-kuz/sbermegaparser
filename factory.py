@@ -8,14 +8,17 @@ class Factory:
     COOLDOWN = 120
     def __init__(self, proxies: list, client_class: Type[Client]):
         self.proxies = proxies
-        self.proxy_timer = dict.fromkeys(self.proxies, 0.0)
+        self.proxy_timer = dict.fromkeys(proxies, 0.0)
         self.client_class = client_class
         self.client = self._init_client()
 
-    @abstractmethod
-    def _init_client(self) -> Type[Client]:
+    def _init_client(self) -> Client:
         proxy = self._get_free_proxy()
         return self.client_class(proxy)
+
+    def _destroy_client(self, client: Client):
+        self._set_proxy_timeout(client.proxy)
+        client.destroy()
 
     def run(self, command: str, *args, **kwargs):
         while True:
@@ -24,9 +27,7 @@ class Factory:
                 data = method(*args, **kwargs)
                 return data
             except ClientStalledException:
-                proxy = getattr(self.client, 'proxy')
-                getattr(self.client, 'destroy')()
-                self._set_proxy_timeout(proxy)
+                self._destroy_client(self.client)
                 self.client = self._init_client()
 
     def _set_proxy_timeout(self, proxy: str):
