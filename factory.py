@@ -14,7 +14,7 @@ class Factory:
 
     @abstractmethod
     def _init_client(self) -> Type[Client]:
-        proxy = self.get_free_proxy()
+        proxy = self._get_free_proxy()
         return self.client_class(proxy)
 
     def run(self, command: str, *args, **kwargs):
@@ -26,13 +26,13 @@ class Factory:
             except ClientStalledException:
                 proxy = getattr(self.client, 'proxy')
                 getattr(self.client, 'destroy')()
-                self.set_proxy_timeout(proxy)
+                self._set_proxy_timeout(proxy)
                 self.client = self._init_client()
 
-    def set_proxy_timeout(self, proxy: str):
+    def _set_proxy_timeout(self, proxy: str):
         self.proxy_timer[proxy] = time.time() + Factory.COOLDOWN
 
-    def get_free_proxy(self) -> str:
+    def _get_free_proxy(self) -> str:
         while True:
             for proxy, timeout in self.proxy_timer.items():
                 if time.time() > timeout:
