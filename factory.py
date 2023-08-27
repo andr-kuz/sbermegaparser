@@ -1,6 +1,7 @@
 from typing import Type
 from client import Client
 from client import ClientStalledException
+from typing import Callable
 import time
 
 class Factory:
@@ -19,12 +20,10 @@ class Factory:
         self._set_proxy_timeout(client.proxy)
         client.destroy()
 
-    def run(self, command: str, *args, **kwargs):
+    def run(self, client_method: Callable, *args, **kwargs):
         while True:
             try:
-                method = getattr(self.client, command)
-                data = method(*args, **kwargs)
-                return data
+                return client_method(self.client, *args, **kwargs)
             except ClientStalledException:
                 self._destroy_client(self.client)
                 self.client = self._init_client()

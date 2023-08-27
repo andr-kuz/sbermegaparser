@@ -9,10 +9,10 @@ def main(urls: list, proxies: list, pause: int = 0):
     for url in urls:
         url = url.strip()
         result = {}
-        product = factory.run('get_product', url)
-        result = '{"' + url + '":' + product.as_json() + '}'
+        product = factory.run(SeleniumClient.get_product, url)
+        result = '{"' + url + '":' + product.asas() + '}'
         print(result, flush=True)
-        factory.run('sleep', pause)
+        factory.run(SeleniumClient.sleep, pause)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape data from sbermegamarket products')
