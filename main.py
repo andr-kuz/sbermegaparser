@@ -1,17 +1,18 @@
 from utils import count_process
-from selenium_fabrique import SeleniumFabrique
+from factory import Factory
+from selenium_client import SeleniumClient
 import argparse
 
 
 def main(urls: list, proxies: list, pause: int = 0):
-    fabrique = SeleniumFabrique(proxies)
+    factory = Factory(proxies, SeleniumClient)
     for url in urls:
         url = url.strip()
         result = {}
-        product = fabrique.run('get_product', url)
+        product = factory.run('get_product', url)
         result = '{"' + url + '":' + product.as_json() + '}'
         print(result, flush=True)
-        fabrique.run('sleep', pause)
+        factory.run('sleep', pause)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape data from sbermegamarket products')

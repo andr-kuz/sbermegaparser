@@ -1,19 +1,21 @@
+from typing import Type
 from abc import abstractmethod
 from client import Client
 from client import ClientStalledException
 import time
 
-class Fabrique:
+class Factory:
     COOLDOWN = 120
-    def __init__(self, proxies: list):
+    def __init__(self, proxies: list, client_class: Type[Client]):
         self.proxies = proxies
         self.proxy_timer = dict.fromkeys(self.proxies, 0.0)
-        self.proxy = self.get_free_proxy()
-        self.client = self._init_client(self.proxy)
+        self.client_class = client_class
+        self.client = self._init_client()
 
     @abstractmethod
-    def _init_client(self, proxy: str) -> Client:
-        pass
+    def _init_client(self) -> Type[Client]:
+        proxy = self.get_free_proxy()
+        return self.client_class(proxy)
 
     def run(self, command: str, *args, **kwargs):
         while True:
@@ -22,13 +24,13 @@ class Fabrique:
                 data = method(*args, **kwargs)
                 return data
             except ClientStalledException:
-                self.client.destroy()
-                self.set_proxy_timeout(self.proxy)
-                self.proxy = self.get_free_proxy()
-                self.client = self._init_client(self.proxy)
+                proxy = getattr(self.client, 'proxy')
+                getattr(self.client, 'destroy')()
+                self.set_proxy_timeout(proxy)
+                self.client = self._init_client()
 
     def set_proxy_timeout(self, proxy: str):
-        self.proxy_timer[proxy] = time.time() + Fabrique.COOLDOWN
+        self.proxy_timer[proxy] = time.time() + Factory.COOLDOWN
 
     def get_free_proxy(self) -> str:
         while True:

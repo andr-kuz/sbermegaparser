@@ -13,19 +13,23 @@ class ClientStalledException(Exception):
 
 
 class Client:
-    cache = {}
+    def __init__(self, proxy_address: str):
+        self.proxy = proxy_address
+        pass
 
     @abstractmethod
     def _get_data(self, url: str) -> str:
         pass
 
+    @abstractmethod
+    def test(self):
+        pass
+
     def get_product(self, url: str) -> Product:
-        if not self.cache.get(url):
-            html = self._get_data(url)
-            self._save_log(url, html)
-            self._is_client_stalled(html)
-            self.cache[url] = Product(html)
-        return self.cache[url]
+        html = self._get_data(url)
+        self._save_log(url, html)
+        self._is_client_stalled(html)
+        return Product(html)
 
     def _is_client_stalled(self, html: str):
         stalled_text = 'Запросы с вашего устройства похожи на автоматические'
