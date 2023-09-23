@@ -5,6 +5,10 @@ class Product:
     def __init__(self, html: str):
         self.html = html
         self.soup = BeautifulSoup(self.html, 'html.parser')
+        self.url = None
+        self.price = None
+        self.cashback_percent = None
+        self.shop_name = None
 
     def as_dict(self) -> dict:
         return {
@@ -17,25 +21,23 @@ class Product:
         return json.dumps(self.as_dict())
 
     def get_price(self) -> int | None:
-        result = None
         if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final meta[itemprop="price"]'):
-            result = int(element.get('content'))
-        return result
+            self.price = int(element.get('content'))
+        return self.price
 
     def get_url(self) -> str | None:
         if element := self.soup.select_one('meta[itemprop="url"]'):
-            return 'https://megamarket.ru' + str(element.attrs.get('content'))
+            self.url = 'https://megamarket.ru' + str(element.attrs.get('content'))
+        return self.url
 
     def get_cashback_percent(self) -> int | None:
-        result = None
         if element := self.soup.select_one('.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent'):
-            result = int(element.get_text().strip().split('%')[0])
-        return result
+            self.cashback_percent = int(element.get_text().strip().split('%')[0])
+        return self.cashback_percent
 
     def get_shop_name(self) -> str | None:
-        result = None
         if element := self.soup.select_one('.pdp-offer-block__merchant-link'):
-            result = element.get_text().strip()
+            self.shop_name = element.get_text().strip()
         elif element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
-            result = element.get_text().strip()
-        return result
+            self.shop_name = element.get_text().strip()
+        return self.shop_name
