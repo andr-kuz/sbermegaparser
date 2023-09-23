@@ -8,6 +8,7 @@ from client import Client
 
 class SeleniumClient(Client):
     def __init__(self, proxy_address: str):
+        self.cache = {}
         self.proxy = proxy_address
         caps = webdriver.DesiredCapabilities().FIREFOX
         caps["pageLoadStrategy"] = "eager"
@@ -36,7 +37,7 @@ class SeleniumClient(Client):
     def _get_data(self, url: str) -> str:
         try:
             self.driver.get(url)
-            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR,'.header-logo')))
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR,'.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent')))
         except TimeoutException:
             pass
         return self.driver.page_source
