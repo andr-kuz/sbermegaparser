@@ -1,12 +1,21 @@
+from abc import abstractmethod
 from bs4 import BeautifulSoup
 import json
 
 class Product:
     def __init__(self, html: str):
-        self.html = html
-        self.soup = BeautifulSoup(self.html, 'html.parser')
-        self.url = None
+        self.soup = BeautifulSoup(html, 'html.parser')
         self.price = None
+
+    @abstractmethod
+    def get_price(self):
+        pass
+
+
+class SberProduct(Product):
+    def __init__(self, html: str):
+        super().__init__(html)
+        self.url = None
         self.cashback_percent = None
         self.shop_name = None
 

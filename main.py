@@ -9,7 +9,7 @@ def main(urls: list, proxies: list, pause: int = 0):
     for url in urls:
         url = url.strip()
         result = {}
-        product = factory.run(SeleniumClient.get_product, url)
+        product = factory.get_product(url)
         result = '{"' + url + '":' + product.as_json() + '}'
         print(result, flush=True)
         factory.run(SeleniumClient.sleep, pause)

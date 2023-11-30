@@ -2,7 +2,6 @@ from seleniumwire import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 from client import Client
 
 
@@ -34,12 +33,10 @@ class SeleniumClient(Client):
         self.driver = webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, desired_capabilities=caps)
         self.driver.set_page_load_timeout(30)
 
-    def _get_data(self, url: str) -> str:
-        try:
-            self.driver.get(url)
-            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR,'.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent')))
-        except TimeoutException:
-            pass
+    def get(self, url: str, find_css_on_page: str = '') -> str:
+        self.driver.get(url)
+        if find_css_on_page:
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, find_css_on_page)))
         return self.driver.page_source
 
     def test(self):
