@@ -25,7 +25,7 @@ if __name__ == '__main__':
         '-p',
         type=int,
         default=0,
-        help='provide pause time between urls (default: 5)'
+        help='provide pause time between urls (default: 0)'
     )
     parser.add_argument(
         '--proxies',
