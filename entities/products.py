@@ -1,6 +1,5 @@
 from abc import abstractmethod
 from entities.entity import Entity
-import json
 
 class Product(Entity):
     @abstractmethod
@@ -21,9 +20,6 @@ class SberProduct(Product):
             'cashback_percent': self.get_cashback_percent(),
             'shop_name': self.get_shop_name(),
         }
-
-    def as_json(self) -> str:
-        return json.dumps(self.as_dict())
 
     def get_price(self) -> int | None:
         if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final meta[itemprop="price"]'):
