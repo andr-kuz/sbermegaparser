@@ -24,7 +24,8 @@ class Facade:
         lowest_timer = 60
         for i, packed_client in enumerate(self._clients):
             if i not in self._clients_rest_till or self._clients_rest_till[i] <= time.time():
-                self._platform.add_client(packed_client())
+                client = packed_client()
+                self._platform.add_client(client)
                 self._current_client_index = i
                 return
             timer = self._clients_rest_till[i]
