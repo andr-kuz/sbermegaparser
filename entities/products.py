@@ -2,6 +2,7 @@ from abc import abstractmethod
 from entities.entity import Entity
 
 class Product(Entity):
+    price = None
     @abstractmethod
     def get_price(self):
         pass
@@ -26,11 +27,6 @@ class SberProduct(Product):
         if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final meta[itemprop="price"]'):
             self.price = int(element.get('content'))
         return self.price
-
-    def get_url(self) -> str | None:
-        if element := self.soup.select_one('meta[itemprop="url"]'):
-            self.url = 'https://megamarket.ru' + str(element.attrs.get('content'))
-        return self.url
 
     def get_cashback_percent(self) -> int | None:
         if element := self.soup.select_one('.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent'):

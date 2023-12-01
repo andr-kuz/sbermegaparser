@@ -7,7 +7,6 @@ class Entity:
     def __init__(self, html: str):
         self._html = html
         self.soup = BeautifulSoup(html, 'html.parser')
-        self.price = None
 
     def __str__(self):
         return self._html
