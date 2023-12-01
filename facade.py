@@ -41,7 +41,7 @@ class Facade:
             try:
                 data = self._platform.get(url)
                 self._cache[url] = data
-                self._save_log(url, data)
+                self._save_log(url, data.__str__())
             except ClientBrokenException:
                 self._timer_current_client()
                 self._init_new_client()

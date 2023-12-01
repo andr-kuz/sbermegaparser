@@ -1,4 +1,5 @@
 import re
+from typing import Type
 from entities.entity import Entity
 from clients.client import Client
 from exceptions import ClientBrokenException
@@ -7,7 +8,7 @@ import time
 
 class Platform:
     client: Client
-    entities_regex: dict[str, Entity]
+    entities_regex: dict[str, type[Entity]]
     stalled_text: str = ''
 
     def __init__(self, timer: int = 0):
@@ -29,7 +30,7 @@ class Platform:
     def _set_timer(self):
         self.timer_end = self.rest_time + time.time()
 
-    def get(self, url: str):
+    def get(self, url: str) -> Entity:
         if not issubclass(type(self.client), Client):
             raise Exception('You need to pass Client to add_client() first')
         self._wait_timer()
@@ -39,9 +40,9 @@ class Platform:
             self._destroy_client()
             raise ClientBrokenException
         self._set_timer()
-        return data
+        return entity(data)
 
-    def _detect_entity_by_url(self, url: str) -> Entity:
+    def _detect_entity_by_url(self, url: str) -> Type[Entity]:
         for regex, entity in self.entities_regex.items():
             pattern = re.compile(regex)
             if pattern.match(url):
