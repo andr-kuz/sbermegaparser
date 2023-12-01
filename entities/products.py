@@ -8,6 +8,7 @@ class Product(Entity):
 
 
 class SberProduct(Product):
+    loaded_selectors = {'css': '.prod-buy .bonus-percent'}
     def __init__(self, html: str):
         super().__init__(html)
         self.url = None
@@ -42,7 +43,3 @@ class SberProduct(Product):
         elif element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
             self.shop_name = element.get_text().strip()
         return self.shop_name
-
-    @staticmethod
-    def is_loaded():
-        return {'css': '.prod-buy .bonus-percent'}
