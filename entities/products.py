@@ -1,12 +1,8 @@
 from abc import abstractmethod
-from bs4 import BeautifulSoup
+from entities.entity import Entity
 import json
 
-class Product:
-    def __init__(self, html: str):
-        self.soup = BeautifulSoup(html, 'html.parser')
-        self.price = None
-
+class Product(Entity):
     @abstractmethod
     def get_price(self):
         pass
@@ -50,3 +46,7 @@ class SberProduct(Product):
         elif element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
             self.shop_name = element.get_text().strip()
         return self.shop_name
+
+    @staticmethod
+    def is_loaded():
+        return {'css': '.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent'}

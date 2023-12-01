@@ -2,7 +2,7 @@ from seleniumwire import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from client import Client
+from clients.client import Client
 
 
 class SeleniumClient(Client):
@@ -33,7 +33,7 @@ class SeleniumClient(Client):
         self.driver = webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, desired_capabilities=caps)
         self.driver.set_page_load_timeout(30)
 
-    def get(self, url: str, find_css_on_page: str = '') -> str:
+    def get(self, url: str, find_css_on_page: str | None = None) -> str:
         self.driver.get(url)
         if find_css_on_page:
             WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, find_css_on_page)))
