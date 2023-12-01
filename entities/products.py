@@ -49,4 +49,4 @@ class SberProduct(Product):
 
     @staticmethod
     def is_loaded():
-        return {'css': '.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent'}
+        return {'css': '.prod-buy .bonus-percent'}
