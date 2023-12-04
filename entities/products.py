@@ -24,7 +24,7 @@ class SberProduct(Product):
         }
 
     def get_price(self) -> int | None:
-        if element := self.soup.select_one('.pdp-sales-block__price-wrap_active .pdp-sales-block__price-final meta[itemprop="price"]'):
+        if element := self.soup.select_one('.prod-buy meta[itemprop="price"]'):
             self.price = int(element.get('content'))
         return self.price
 
