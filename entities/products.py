@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from entities.entity import Entity
+import json
 
 class Product(Entity):
     price = None
@@ -39,3 +40,18 @@ class SberProduct(Product):
         elif element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
             self.shop_name = element.get_text().strip()
         return self.shop_name
+
+class OzonProduct(Product):
+    loaded_selectors = {'css': '[id^="state-webPrice-"]'}
+    product_data: dict = {}
+
+    def get_price(self) -> int | None:
+        if not self.product_data:
+            if element := self.soup.select_one('[id^="state-webPrice-"][data-state]'):
+                self.product_data = json.loads(element.get('data-state')) or {}
+        return self.product_data.get('price', 0)
+
+    def as_dict(self) -> dict:
+        return {
+            'price': self.get_price()
+        }
