@@ -11,7 +11,7 @@ class Client:
         return self.__str__
 
     @abstractmethod
-    def get(self, url: str, find_css_on_page: str | None = None) -> str:
+    def get(self, url: str, find_css_on_page: list = []) -> str:
         pass
 
     @abstractmethod
