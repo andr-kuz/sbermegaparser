@@ -42,14 +42,20 @@ class SberProduct(Product):
         return self.shop_name
 
 class OzonProduct(Product):
-    loaded_selectors = {'css': '[id^="state-webPrice-"]'}
+    loaded_selectors = {'css': 'script[type="application/ld+json"]'}
     product_data: dict = {}
 
-    def get_price(self) -> int | None:
+    def __init__(self, html: str):
+        super().__init__(html)
+        self._get_product_data()
+
+    def _get_product_data(self):
         if not self.product_data:
-            if element := self.soup.select_one('[id^="state-webPrice-"][data-state]'):
-                self.product_data = json.loads(element.get('data-state')) or {}
-        return self.product_data.get('price', 0)
+            if element := self.soup.select_one('script[type="application/ld+json"]'):
+                self.product_data = json.loads(element.text) or {}
+
+    def get_price(self) -> int | None:
+        return int(self.product_data.get('offers', {}).get('price'))
 
     def as_dict(self) -> dict:
         return {

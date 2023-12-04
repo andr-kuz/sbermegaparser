@@ -1,6 +1,6 @@
 from utils import count_process
 from facade import Facade
-from clients.selenium import SeleniumClient
+from clients.pyppeteer import Pyppeteer
 import argparse
 from functools import partial
 
@@ -8,7 +8,7 @@ from functools import partial
 def main(urls: list, proxies: list, pause: int = 0):
     platform = Facade.detect_platform_by_url(urls[0])
     platform = platform(pause)
-    clients = [partial(SeleniumClient, p) for p in proxies]
+    clients = [partial(Pyppeteer, p) for p in proxies]
     facade = Facade(platform, clients, 120)
     for url in urls:
         url = url.strip()
@@ -46,5 +46,5 @@ if __name__ == '__main__':
     if args.proxies:
         with open(args.proxies) as file:
             proxies = list(file)
-    if count_process(__file__) == 1:
-        main(urls, proxies, args.p)
+    # if count_process(__file__) == 1:
+    main(urls, proxies, args.p)

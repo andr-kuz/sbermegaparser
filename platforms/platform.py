@@ -19,7 +19,7 @@ class Platform:
         self.client = client
 
     def _destroy_client(self):
-        self.client.destroy()
+        self.client.__del__()
         self.client = Platform.client
 
     def _wait_timer(self):
@@ -47,7 +47,7 @@ class Platform:
             pattern = re.compile(regex)
             if pattern.match(url):
                 return entity
-        return Entity
+        raise Exception('No entity found')
 
     def _is_client_broken(self, page_data: str) -> bool | None:
         if self.stalled_text and self.stalled_text in page_data:
