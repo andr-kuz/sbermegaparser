@@ -1,13 +1,13 @@
 from utils import count_process
 from facade import Facade
 from clients.selenium import SeleniumClient
-from platforms.sber import Sber
 import argparse
 from functools import partial
 
 
 def main(urls: list, proxies: list, pause: int = 0):
-    platform = Sber(pause)
+    platform = Facade.detect_platform_by_url(urls[0])
+    platform = platform(pause)
     clients = [partial(SeleniumClient, p) for p in proxies]
     facade = Facade(platform, clients, 120)
     for url in urls:

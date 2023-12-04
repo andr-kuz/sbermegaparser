@@ -1,9 +1,12 @@
-from typing import Callable
+from typing import Callable, Type
 from urllib.parse import quote
 import os
 from platforms.platform import Platform
+from platforms.sber import Sber
+from platforms.sber import Ozon
 import time
 from exceptions import ClientBrokenException
+import re
 
 class Facade:
     """
@@ -14,6 +17,10 @@ class Facade:
     _current_client_index: int | None = None
     _clients_rest_till: dict = {}
     _cache: dict = {}
+    _platforms_regex = {
+        'https://megamarket.ru': Sber,
+        'ozon.ru': Ozon
+    }
     def __init__(self, platform: Platform, packed_clients: list[Callable], client_timer: int = 0):
         self._client_timer = client_timer
         self._platform = platform
@@ -54,3 +61,11 @@ class Facade:
         path = os.path.abspath(os.path.dirname(__file__))
         with open(path + os.sep + 'temp' + os.sep + name + '.html', 'w') as f:
             f.write(html)
+
+    @staticmethod
+    def detect_platform_by_url(url: str) -> Type[Platform]:
+        for regex, platform in Facade._platforms_regex.items():
+            pattern = re.compile(regex)
+            if pattern.match(url):
+                return platform
+        raise Exception('No platform detected')
