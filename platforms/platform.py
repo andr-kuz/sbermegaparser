@@ -35,7 +35,7 @@ class Platform:
             raise Exception('You need to pass Client to add_client() first')
         self._wait_timer()
         entity = self._detect_entity_by_url(url)
-        data = self.client.get(url, entity.loaded_selectors.get('css', []))
+        data = self.client.get(url, entity.loaded_selectors.get('css'))
         if self._is_client_broken(data):
             self._destroy_client()
             raise ClientBrokenException

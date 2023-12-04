@@ -34,12 +34,11 @@ class SeleniumClient(Client):
         self.driver = webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, desired_capabilities=caps)
         self.driver.set_page_load_timeout(30)
 
-    def get(self, url: str, find_css_on_page: list = []) -> str:
+    def get(self, url: str, find_css_on_page: str | None = '') -> str:
         self.driver.get(url)
-        for i in find_css_on_page:
-            selector, timeout = i
+        if find_css_on_page:
             try:
-                WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+                WebDriverWait(self.driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, find_css_on_page)))
             except TimeoutException:
                 pass
         return self.driver.page_source

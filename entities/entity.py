@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 
 class Entity:
-    loaded_selectors: dict[str, list[tuple[str, int]]] = {'css': []}
+    loaded_selectors: dict[str, str] = {'css': ''}
     def __init__(self, html: str):
         self._html = html
         self.soup = BeautifulSoup(html, 'html.parser')

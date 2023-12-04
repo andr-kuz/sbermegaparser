@@ -9,7 +9,7 @@ class Product(Entity):
 
 
 class SberProduct(Product):
-    loaded_selectors = {'css': [('.out-of-stock-block', 5), ('.prod-buy .bonus-percent', 10)]}
+    loaded_selectors = {'css': '.prod-buy .bonus-percent'}
     def __init__(self, html: str):
         super().__init__(html)
         self.url = None
