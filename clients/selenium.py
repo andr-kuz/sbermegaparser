@@ -38,7 +38,10 @@ class SeleniumClient(Client):
         self.driver.get(url)
         for i in find_css_on_page:
             selector, timeout = i
-            WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+            try:
+                WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+            except TimeoutException:
+                pass
         return self.driver.page_source
 
     def test(self):
