@@ -8,7 +8,6 @@ from clients.client import Client
 
 class SeleniumClient(Client):
     def __init__(self, proxy_address: str):
-        self.cache = {}
         self.proxy = proxy_address
         caps = webdriver.DesiredCapabilities().FIREFOX
         caps["pageLoadStrategy"] = "eager"
