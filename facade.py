@@ -3,7 +3,7 @@ from urllib.parse import quote
 import os
 from platforms.platform import Platform
 from platforms.sber import Sber
-from platforms.sber import Ozon
+from platforms.ozon import Ozon
 import time
 from exceptions import ClientBrokenException
 import re
@@ -19,7 +19,7 @@ class Facade:
     _cache: dict = {}
     _platforms_regex = {
         'https://megamarket.ru': Sber,
-        'ozon.ru': Ozon
+        'https://www.ozon.ru': Ozon
     }
     def __init__(self, platform: Platform, packed_clients: list[Callable], client_timer: int = 0):
         self._client_timer = client_timer
