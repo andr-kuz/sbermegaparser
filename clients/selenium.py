@@ -49,7 +49,7 @@ class SeleniumClient(Client):
         print('')
         print(self.driver.page_source)
 
-    def destroy(self):
+    def __del__(self):
         try:
             self.driver.quit()
         except Exception:

@@ -19,8 +19,5 @@ class Client:
         pass
 
     @abstractmethod
-    def destroy(self):
-        pass
-
     def __del__(self):
-        self.destroy()
+        pass
