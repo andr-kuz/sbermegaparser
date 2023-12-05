@@ -1,6 +1,7 @@
 from typing import Callable, Type
 from urllib.parse import quote
 import os
+from entities.entity import Entity
 from platforms.platform import Platform
 from platforms.sber import Sber
 from platforms.ozon import Ozon
@@ -44,7 +45,7 @@ class Facade:
         self._clients_rest_till[self._current_client_index] = time.time() + self._client_timer
         self._current_client_index = None
 
-    def get(self, url: str):
+    def get(self, url: str) -> Entity:
         if not url in self._cache:
             try:
                 data = self._platform.get(url)
