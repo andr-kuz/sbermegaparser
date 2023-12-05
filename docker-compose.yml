@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      shm_size: "2gb"
+    shm_size: "2gb"
+    container_name: 'sberparser'
+    volumes:
+      - .:/home/app
+    restart: always
+    tty: true
