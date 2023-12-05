@@ -55,7 +55,8 @@ class OzonProduct(Product):
                 self.product_data = json.loads(element.text) or {}
 
     def get_price(self) -> int | None:
-        return int(self.product_data.get('offers', {}).get('price'))
+        if price := self.product_data.get('offers', {}).get('price'):
+            return int(price)
 
     def as_dict(self) -> dict:
         return {
