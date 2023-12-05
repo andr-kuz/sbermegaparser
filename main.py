@@ -46,5 +46,5 @@ if __name__ == '__main__':
     if args.proxies:
         with open(args.proxies) as file:
             proxies = list(file)
-    # if count_process(__file__) == 1:
-    main(urls, proxies, args.p)
+    if count_process(__file__) == 1:
+        main(urls, proxies, args.p)
