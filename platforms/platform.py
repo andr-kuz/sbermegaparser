@@ -7,7 +7,7 @@ import time
 
 
 class Platform:
-    client: Client
+    client: Client | None = None
     entities_regex: dict[str, type[Entity]]
     stalled_text: str = ''
 
@@ -19,8 +19,9 @@ class Platform:
         self.client = client
 
     def _destroy_client(self):
-        self.client.__del__()
-        self.client = Platform.client
+        if self.client:
+            self.client.__del__()
+        self.client = None
 
     def _wait_timer(self):
         timer_left = self.timer_end - time.time()
