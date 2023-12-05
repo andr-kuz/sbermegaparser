@@ -5,8 +5,9 @@ import argparse
 from functools import partial
 from playwright._impl._errors import TimeoutError
 from selenium.common.exceptions import TimeoutException
+from exceptions import OzonTryAgainException
 
-RETRY_EXCEPTIONS = (TimeoutError, TimeoutException)
+RETRY_EXCEPTIONS = (TimeoutError, TimeoutException, OzonTryAgainException)
 
 
 def main(urls: list, proxies: list, pause: int = 0):
