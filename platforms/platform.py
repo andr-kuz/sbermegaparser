@@ -7,13 +7,15 @@ import time
 
 
 class Platform:
+    client_class = Client
     client: Client | None = None
     entities_regex: dict[str, type[Entity]]
     stalled_text: str = ''
+    rest_time: int = 5
+    timer_end = 0
 
     def __init__(self, timer: int = 0):
-        self.rest_time = timer
-        self.timer_end = 0
+        self.rest_time = timer or self.rest_time
 
     def add_client(self, client: Client):
         self.client = client

@@ -3,14 +3,13 @@ from clients.client import Client
 from playwright._impl._errors import TimeoutError
 import atexit
 
-class Pyppeteer(Client):
+class Playwright(Client):
     def __init__(self, proxy_address: str):
         atexit.register(self.__del__)
         self.proxy = proxy_address
         self.playwright = sync_playwright().start()
         self.driver = self.playwright.firefox.launch(
             headless=True,
-            args = [f'--proxy-server={proxy_address}']
         )
 
     def get(self, url: str, find_css_on_page: str | None = '') -> str:

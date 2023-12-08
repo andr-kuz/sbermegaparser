@@ -6,7 +6,7 @@ from selenium.common.exceptions import TimeoutException
 from clients.client import Client
 
 
-class SeleniumClient(Client):
+class Selenium(Client):
     def __init__(self, proxy_address: str):
         self.proxy = proxy_address
         caps = webdriver.DesiredCapabilities().FIREFOX
