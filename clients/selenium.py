@@ -3,12 +3,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from client import Client
+from clients.client import Client
 
 
-class SeleniumClient(Client):
+class Selenium(Client):
     def __init__(self, proxy_address: str):
-        self.cache = {}
         self.proxy = proxy_address
         caps = webdriver.DesiredCapabilities().FIREFOX
         caps["pageLoadStrategy"] = "eager"
@@ -34,12 +33,13 @@ class SeleniumClient(Client):
         self.driver = webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, desired_capabilities=caps)
         self.driver.set_page_load_timeout(30)
 
-    def _get_data(self, url: str) -> str:
-        try:
-            self.driver.get(url)
-            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR,'.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent')))
-        except TimeoutException:
-            pass
+    def get(self, url: str, find_css_on_page: str | None = '') -> str:
+        self.driver.get(url)
+        if find_css_on_page:
+            try:
+                WebDriverWait(self.driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, find_css_on_page)))
+            except TimeoutException:
+                pass
         return self.driver.page_source
 
     def test(self):
@@ -49,7 +49,7 @@ class SeleniumClient(Client):
         print('')
         print(self.driver.page_source)
 
-    def destroy(self):
+    def __del__(self):
         try:
             self.driver.quit()
         except Exception:

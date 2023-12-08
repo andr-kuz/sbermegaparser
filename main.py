@@ -1,18 +1,31 @@
 from utils import count_process
-from factory import Factory
-from selenium_client import SeleniumClient
+from facade import Facade
 import argparse
+from playwright._impl._errors import TimeoutError
+from selenium.common.exceptions import TimeoutException
+from exceptions import OzonTryAgainException
+
+RETRY_EXCEPTIONS = (TimeoutError, TimeoutException, OzonTryAgainException)
 
 
 def main(urls: list, proxies: list, pause: int = 0):
-    factory = Factory(proxies, SeleniumClient)
+    platform = Facade.detect_platform_by_url(urls[0])
+    platform = platform(pause)
+    facade = Facade(platform, proxies, 120)
     for url in urls:
         url = url.strip()
         result = {}
-        product = factory.run(SeleniumClient.get_product, url)
-        result = '{"' + url + '":' + product.as_json() + '}'
-        print(result, flush=True)
-        factory.run(SeleniumClient.sleep, pause)
+        count_exceptions = 0
+        while True:
+            try:
+                product = facade.get(url)
+                result = '{"' + url + '":' + product.as_json() + '}'
+                print(result, flush=True)
+                break
+            except RETRY_EXCEPTIONS:
+                count_exceptions += 1
+                if count_exceptions > 3:
+                    break
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape data from sbermegamarket products')

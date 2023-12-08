@@ -14,8 +14,6 @@ services:
       shm_size: "2gb"
     shm_size: "2gb"
     container_name: 'sberparser'
-    ports:
-      - 8087:8087
     volumes:
       - .:/home/app
     restart: always

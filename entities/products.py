@@ -1,12 +1,19 @@
-from bs4 import BeautifulSoup
+from abc import abstractmethod
+from entities.entity import Entity
 import json
 
-class Product:
+class Product(Entity):
+    price = None
+    @abstractmethod
+    def get_price(self):
+        pass
+
+
+class SberProduct(Product):
+    loaded_selectors = {'css': '.prod-buy .bonus-percent'}
     def __init__(self, html: str):
-        self.html = html
-        self.soup = BeautifulSoup(self.html, 'html.parser')
+        super().__init__(html)
         self.url = None
-        self.price = None
         self.cashback_percent = None
         self.shop_name = None
 
@@ -17,18 +24,10 @@ class Product:
             'shop_name': self.get_shop_name(),
         }
 
-    def as_json(self) -> str:
-        return json.dumps(self.as_dict())
-
     def get_price(self) -> int | None:
         if element := self.soup.select_one('.prod-buy meta[itemprop="price"]'):
             self.price = int(element.get('content'))
         return self.price
-
-    def get_url(self) -> str | None:
-        if element := self.soup.select_one('meta[itemprop="url"]'):
-            self.url = 'https://megamarket.ru' + str(element.attrs.get('content'))
-        return self.url
 
     def get_cashback_percent(self) -> int | None:
         if element := self.soup.select_one('.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent'):
@@ -41,3 +40,25 @@ class Product:
         elif element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
             self.shop_name = element.get_text().strip()
         return self.shop_name
+
+class OzonProduct(Product):
+    loaded_selectors = {'css': 'script[type="application/ld+json"]'}
+    product_data: dict = {}
+
+    def __init__(self, html: str):
+        super().__init__(html)
+        self._get_product_data()
+
+    def _get_product_data(self):
+        if not self.product_data:
+            if element := self.soup.select_one('script[type="application/ld+json"]'):
+                self.product_data = json.loads(element.text) or {}
+
+    def get_price(self) -> int | None:
+        if price := self.product_data.get('offers', {}).get('price'):
+            return int(price)
+
+    def as_dict(self) -> dict:
+        return {
+            'price': self.get_price()
+        }
