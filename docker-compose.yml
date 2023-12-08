@@ -1,6 +1,13 @@
 version: '3.8'
 
 services:
+  firefox:
+    image: selenium/standalone-firefox:110.0
+    container_name: firefox
+    ports:
+      - '4443:4443'
+    restart: always
+
   app:
     build:
       context: .
@@ -11,3 +18,5 @@ services:
       - .:/home/app
     restart: always
     tty: true
+    depends_on:
+      - firefox

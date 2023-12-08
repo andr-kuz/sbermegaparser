@@ -1,8 +1,6 @@
 from utils import count_process
 from facade import Facade
-from clients.pyppeteer import Pyppeteer
 import argparse
-from functools import partial
 from playwright._impl._errors import TimeoutError
 from selenium.common.exceptions import TimeoutException
 from exceptions import OzonTryAgainException
@@ -13,8 +11,7 @@ RETRY_EXCEPTIONS = (TimeoutError, TimeoutException, OzonTryAgainException)
 def main(urls: list, proxies: list, pause: int = 0):
     platform = Facade.detect_platform_by_url(urls[0])
     platform = platform(pause)
-    clients = [partial(Pyppeteer, p) for p in proxies]
-    facade = Facade(platform, clients, 120)
+    facade = Facade(platform, proxies, 120)
     for url in urls:
         url = url.strip()
         result = {}
