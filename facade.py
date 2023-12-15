@@ -3,8 +3,8 @@ from urllib.parse import quote
 import os
 from entities.entity import Entity
 from platforms.platform import Platform
-from platforms.sber import Sber
-from platforms.ozon import Ozon
+from platforms import Sber
+from platforms import Ozon
 import time
 from exceptions import ClientBrokenException
 import re

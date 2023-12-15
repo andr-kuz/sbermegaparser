@@ -25,7 +25,7 @@ class Playwright(Client):
         return data
 
     def test(self):
-        pass
+        print(self.get('https://2ip.ru'))
 
     def __del__(self):
         try:

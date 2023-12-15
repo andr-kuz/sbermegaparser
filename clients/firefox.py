@@ -1,36 +1,29 @@
 from seleniumwire import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from clients.client import Client
+from pyvirtualdisplay import Display
 
 
-class Selenium(Client):
+class Firefox(Client):
     def __init__(self, proxy_address: str):
         self.proxy = proxy_address
-        caps = webdriver.DesiredCapabilities().FIREFOX
-        caps["pageLoadStrategy"] = "eager"
+        display = Display(visible=0, size=(800, 600))
+        display.start()
 
         options = webdriver.FirefoxOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
+        options.page_load_strategy = 'eager'
         sw_options = {
-            'auto_config': False,
-            'addr': 'sberparser',
-            'port': 8087,
             'proxy': {
-                'http': proxy_address,
-                'https': proxy_address,
+                'http': self.proxy,
+                'https': self.proxy,
+                'no_proxy': 'localhost,127.0.0.1'
             }
         }
 
-        proxy = webdriver.Proxy()
-        proxy.http_proxy = 'sberparser:8087'
-        proxy.ssl_proxy = 'sberparser:8087'
-        options.proxy = proxy
-
-        self.driver = webdriver.Remote("http://firefox:4444/wd/hub", options=options, seleniumwire_options=sw_options, desired_capabilities=caps)
+        self.driver = webdriver.Firefox(options=options, seleniumwire_options=sw_options)
         self.driver.set_page_load_timeout(30)
 
     def get(self, url: str, find_css_on_page: str | None = '') -> str:

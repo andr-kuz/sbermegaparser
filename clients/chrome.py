@@ -51,8 +51,6 @@ class Chrome(Client):
 
     def test(self):
         self.driver.get('https://2ip.ru')
-        import pdb
-        pdb.set_trace()
         print('IP:', self.driver.find_element(By.CSS_SELECTOR, '#d_clip_button').text)
         self.driver.get('https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html')
         print('')

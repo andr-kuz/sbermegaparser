@@ -1,17 +1,15 @@
 from utils import count_process
 from facade import Facade
 import argparse
-from playwright._impl._errors import TimeoutError
 from selenium.common.exceptions import TimeoutException
-from exceptions import OzonTryAgainException
 
-RETRY_EXCEPTIONS = (TimeoutError, TimeoutException, OzonTryAgainException)
+RETRY_EXCEPTIONS = (TimeoutException)
 
 
 def main(urls: list, proxies: list, pause: int = 0):
     platform = Facade.detect_platform_by_url(urls[0])
     platform = platform(pause)
-    facade = Facade(platform, proxies, 120)
+    facade = Facade(platform, proxies, 10)
     for url in urls:
         url = url.strip()
         result = {}
