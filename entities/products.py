@@ -22,12 +22,21 @@ class SberProduct(Product):
             'price': self.get_price(),
             'cashback_percent': self.get_cashback_percent(),
             'shop_name': self.get_shop_name(),
+            'offers': self.get_offers()
         }
 
     def get_price(self) -> int | None:
         if element := self.soup.select_one('.prod-buy meta[itemprop="price"]'):
             self.price = int(element.get('content'))
         return self.price
+
+    def get_offers(self) -> list[dict]:
+        offers = []
+        if ',"offers":[{' in self._html and '}],"favoriteOffer":{' in self._html:
+            offers_str = self._html.split(',"offers":[{')[1].split('}],"favoriteOffer":{')[0]
+            offers_str = '[{'+ offers_str +'}]'
+            offers = json.loads(offers_str)
+        return offers
 
     def get_cashback_percent(self) -> int | None:
         if element := self.soup.select_one('.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent'):
