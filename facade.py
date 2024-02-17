@@ -34,7 +34,8 @@ class Facade:
                 i not in self._proxies_rest_till
                 or self._proxies_rest_till[i] <= time.time()
             ):
-                client = self.platform.client_class(proxy)
+                client_type = self.platform.client_type
+                client = client_type(proxy)
                 self.platform.add_client(client)
                 self._current_proxy_index = i
                 return

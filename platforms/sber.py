@@ -4,9 +4,9 @@ from clients import Firefox
 
 
 class Sber(Platform):
-    stalled_text = 'Запросы с вашего устройства похожи на автоматические'
-    entities_regex = {
+    _stalled_text = 'Запросы с вашего устройства похожи на автоматические'
+    _entities_regex = {
         'https://megamarket.ru/catalog/details/[a-zA-Z0-9-]+/?$': SberProduct
     }
-    client_class = Firefox
-    rest_time = 5
+    _rest_time = 5
+    client_type = Firefox
