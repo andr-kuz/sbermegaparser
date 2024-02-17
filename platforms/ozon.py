@@ -9,4 +9,4 @@ class Ozon(Platform):
         'https://www.ozon.ru/product/[a-zA-Z0-9-]+?/': OzonProduct
     }
     _rest_time = 8
-    client_class = Firefox
+    client_type = Firefox
