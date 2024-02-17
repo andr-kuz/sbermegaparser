@@ -19,7 +19,7 @@ class SberProduct(Product):
     def as_dict(self) -> dict:
         return {
             'price': self.get_price(),
-            'cashback_percent': self.get_cashback_percent(),
+            'cashback_percent': self.get_sber_cashback_percent(),
             'shop_name': self.get_shop_name(),
             'offers': self.get_offers()
         }
@@ -36,7 +36,7 @@ class SberProduct(Product):
             offers = json.loads(offers_str)
         return offers
 
-    def get_cashback_percent(self) -> int | None:
+    def get_sber_cashback_percent(self) -> int | None:
         if element := self._soup.select_one('.pdp-cashback-table__money-bonus:not(.money-bonus_grey) .bonus-percent'):
             return int(element.get_text().strip().split('%')[0])
 
