@@ -1,27 +1,21 @@
-from typing import Callable, Type
 from urllib.parse import quote
 import os
 from entities.entity import Entity
 from platforms.platform import Platform
-from platforms import Sber
-from platforms import Ozon
 import time
 from exceptions import ClientBrokenException
-import re
+
 
 class Facade:
     """
     Do log,
     getting data from Platform.client or self cache
-    rotate Clients
+    reinit Clients
     """
     _current_proxy_index: int | None = None
     _proxies_rest_till: dict = {}
     _cache: dict = {}
-    _platforms_regex = {
-        'https://megamarket.ru': Sber,
-        'https://www.ozon.ru': Ozon
-    }
+
     def __init__(self, platform: Platform, proxies: list[str] = [''], client_pause: int = 0):
         self.client_pause = client_pause
         self.platform = platform
@@ -46,7 +40,7 @@ class Facade:
         self._current_proxy_index = None
 
     def get(self, url: str) -> Entity:
-        if not url in self._cache:
+        if url not in self._cache:
             try:
                 data = self.platform.get(url)
                 self._cache[url] = data
@@ -62,11 +56,3 @@ class Facade:
         path = os.path.abspath(os.path.dirname(__file__))
         with open(path + os.sep + 'temp' + os.sep + name + '.html', 'w') as f:
             f.write(html)
-
-    @staticmethod
-    def detect_platform_by_url(url: str) -> Type[Platform]:
-        for regex, platform in Facade._platforms_regex.items():
-            pattern = re.compile(regex)
-            if pattern.match(url):
-                return platform
-        raise Exception('No platform detected')

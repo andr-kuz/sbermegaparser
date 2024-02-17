@@ -2,12 +2,13 @@ from utils import count_process
 from facade import Facade
 import argparse
 from selenium.common.exceptions import TimeoutException
+from platform_factory import PlatformFactory
 
 RETRY_EXCEPTIONS = (TimeoutException)
 
 
 def main(urls: list, proxies: list, pause: int = 0):
-    platform = Facade.detect_platform_by_url(urls[0])
+    platform = PlatformFactory.detect_platform(urls[0])
     platform = platform(pause)
     facade = Facade(platform, proxies, 10)
     for url in urls:
