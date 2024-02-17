@@ -2,6 +2,7 @@ from entities import SberProduct
 from platforms.platform import Platform
 from clients import Firefox
 
+
 class Sber(Platform):
     stalled_text = 'Запросы с вашего устройства похожи на автоматические'
     entities_regex = {

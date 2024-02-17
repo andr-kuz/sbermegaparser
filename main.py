@@ -26,8 +26,11 @@ def main(urls: list, proxies: list, pause: int = 0):
                 if count_exceptions > 3:
                     break
 
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Scrape data from sbermegamarket products')
+    parser = argparse.ArgumentParser(
+        description='Scrape data from several marketplaces'
+    )
     parser.add_argument(
         '-f',
         type=str,
@@ -55,5 +58,5 @@ if __name__ == '__main__':
     if args.proxies:
         with open(args.proxies) as file:
             proxies = list(file)
-    if count_process(__file__) == 1:
+    if count_process(__file__) == 0:
         main(urls, proxies, args.p)

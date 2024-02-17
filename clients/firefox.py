@@ -4,13 +4,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from clients.client import Client
-from pyvirtualdisplay import Display
+from pyvirtualdisplay.display import Display
 
 
 class Firefox(Client):
     def __init__(self, proxy_address: str):
         self.proxy = proxy_address
-        display = Display(visible=0, size=(800, 600))
+        display = Display(visible=False, size=(800, 600))
         display.start()
 
         options = webdriver.FirefoxOptions()

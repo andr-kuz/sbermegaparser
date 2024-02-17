@@ -5,6 +5,7 @@ class ClientBrokenException(Exception):
     def __str__(self):
         return self.message
 
+
 class OzonTryAgainException(Exception):
     def __init__(self):
         self.message = """
@@ -17,4 +18,3 @@ class OzonTryAgainException(Exception):
 
     def __str__(self):
         return self.message
-

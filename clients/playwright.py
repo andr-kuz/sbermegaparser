@@ -3,6 +3,7 @@ from clients.client import Client
 from playwright._impl._errors import TimeoutError
 import atexit
 
+
 class Playwright(Client):
     def __init__(self, proxy_address: str):
         atexit.register(self.__del__)

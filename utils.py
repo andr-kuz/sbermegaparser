@@ -1,5 +1,6 @@
 import psutil
 
+
 def count_process(path: str) -> int:
     processes = []
     for process in psutil.process_iter():

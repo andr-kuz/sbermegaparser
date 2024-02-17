@@ -2,15 +2,18 @@ from abc import abstractmethod
 from entities.entity import Entity
 import json
 
+
 class Product(Entity):
     price = None
+
     @abstractmethod
-    def get_price(self):
+    def get_price(self) -> int | None:
         pass
 
 
 class SberProduct(Product):
     loaded_selectors = {'css': '.prod-buy .bonus-percent'}
+
     def __init__(self, html: str):
         super().__init__(html)
         self.url = None
@@ -34,7 +37,7 @@ class SberProduct(Product):
         offers = []
         if ',"offers":[{' in self._html and '}],"favoriteOffer":{' in self._html:
             offers_str = self._html.split(',"offers":[{')[1].split('}],"favoriteOffer":{')[0]
-            offers_str = '[{'+ offers_str +'}]'
+            offers_str = '[{' + offers_str + '}]'
             offers = json.loads(offers_str)
         return offers
 
@@ -49,6 +52,7 @@ class SberProduct(Product):
         elif element := self.soup.select_one('.pdp-merchant-rating-block__merchant-name'):
             self.shop_name = element.get_text().strip()
         return self.shop_name
+
 
 class OzonProduct(Product):
     loaded_selectors = {'css': 'script[type="application/ld+json"]'}

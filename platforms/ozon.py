@@ -2,6 +2,7 @@ from platforms.platform import Platform
 from entities import OzonProduct
 from clients import Firefox
 
+
 class Ozon(Platform):
     stalled_attempts: int = 0
     stalled_text = 'Checking if the site connection is secure'

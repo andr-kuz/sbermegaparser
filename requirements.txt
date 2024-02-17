@@ -1,3 +1,4 @@
+# sudo pacman -S xorg-server-xvfb || sudo apt install xvfb
 selenium==4.16.0
 beautifulsoup4==4.12.2
 selenium-wire==5.1.0

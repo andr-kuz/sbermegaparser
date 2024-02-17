@@ -7,16 +7,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from clients.client import Client
 from selenium_stealth import stealth
-from pyvirtualdisplay import Display
+from pyvirtualdisplay.display import Display
 
 
 class Chrome(Client):
     def __init__(self, proxy_address: str):
         self.proxy = proxy_address
-        display = Display(visible=0, size=(800, 600))
+        display = Display(visible=False, size=(800, 600))
         display.start()
 
-        s=Service(ChromeDriverManager().install())
+        s = Service(ChromeDriverManager().install())
         options = webdriver.ChromeOptions()
         options.page_load_strategy = 'eager'
         options.add_argument('--ignore-certificate-errors')
@@ -29,7 +29,8 @@ class Chrome(Client):
         }
 
         self.driver = webdriver.Chrome(service=s, options=options, seleniumwire_options=sw_options)
-        stealth(self.driver,
+        stealth(
+            self.driver,
             languages=['en-US', 'en'],
             vendor='Google Inc.',
             platform='Win32',

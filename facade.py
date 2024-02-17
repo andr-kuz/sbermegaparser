@@ -16,7 +16,12 @@ class Facade:
     _proxies_rest_till: dict = {}
     _cache: dict = {}
 
-    def __init__(self, platform: Platform, proxies: list[str] = [''], client_pause: int = 0):
+    def __init__(
+            self,
+            platform: Platform,
+            proxies: list[str] = [''],
+            client_pause: int = 0
+            ):
         self.client_pause = client_pause
         self.platform = platform
         self.proxies = proxies
@@ -25,7 +30,10 @@ class Facade:
     def _init_new_client(self) -> None:
         lowest_timer = 60
         for i, proxy in enumerate(self.proxies):
-            if i not in self._proxies_rest_till or self._proxies_rest_till[i] <= time.time():
+            if (
+                i not in self._proxies_rest_till
+                or self._proxies_rest_till[i] <= time.time()
+            ):
                 client = self.platform.client_class(proxy)
                 self.platform.add_client(client)
                 self._current_proxy_index = i
