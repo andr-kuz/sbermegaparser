@@ -25,7 +25,7 @@ class SberProduct(Product):
         }
 
     def get_price(self) -> int | None:
-        if element := self._soup.select_one('.prod-buy meta[itemprop="price"]'):
+        if element := self._soup.select_one('.sales-block-offer-price__price-final meta[itemprop="price"]'):
             return int(element.get('content'))
 
     def get_offers(self) -> list[dict]:
