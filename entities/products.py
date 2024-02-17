@@ -21,8 +21,13 @@ class SberProduct(Product):
             'price': self.get_price(),
             'cashback_percent': self.get_sber_cashback_percent(),
             'shop_name': self.get_shop_name(),
+            'sku': self.get_sku(),
             'offers': self.get_offers()
         }
+
+    def get_sku(self) -> str | None:
+        if element := self._soup.select_one('meta[itemprop="sku"]'):
+            return element.get('content')
 
     def get_price(self) -> int | None:
         if element := self._soup.select_one('.sales-block-offer-price__price-final meta[itemprop="price"]'):
