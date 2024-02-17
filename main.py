@@ -11,19 +11,21 @@ def main(urls: list, proxies: list, pause: int = 0):
     platform = PlatformFactory.detect_platform(urls[0])
     platform = platform(pause)
     facade = Facade(platform, proxies, 10)
+    max_exceptions = 3
+    exceptions_counter = 0
     for url in urls:
         url = url.strip()
         result = {}
-        count_exceptions = 0
         while True:
             try:
                 product = facade.get(url)
+                exceptions_counter = 0
                 result = '{"' + url + '":' + product.as_json() + '}'
                 print(result, flush=True)
                 break
             except RETRY_EXCEPTIONS:
-                count_exceptions += 1
-                if count_exceptions > 3:
+                exceptions_counter += 1
+                if exceptions_counter == max_exceptions:
                     break
 
 
@@ -58,5 +60,5 @@ if __name__ == '__main__':
     if args.proxies:
         with open(args.proxies) as file:
             proxies = list(file)
-    if count_process(__file__) == 0:
+    if count_process(__file__) == 1:
         main(urls, proxies, args.p)

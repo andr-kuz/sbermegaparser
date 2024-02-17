@@ -15,6 +15,8 @@ class Facade:
     _current_proxy_index: int | None = None
     _proxies_rest_till: dict = {}
     _cache: dict = {}
+    _max_errors = 3
+    _errors_counter = 0
 
     def __init__(
             self,
@@ -52,9 +54,13 @@ class Facade:
         if url not in self._cache:
             try:
                 data = self.platform.get(url)
+                self._errors_counter = 0
                 self._cache[url] = data
                 self._save_log(url, data.__str__())
             except ClientBrokenException:
+                self._errors_counter += 1
+                if self._errors_counter == self._max_errors:
+                    raise Exception(f'ClientBroken exceptions limit is reached {self._max_errors}')
                 self._timer_current_client()
                 self._init_new_client()
                 return self.get(url)

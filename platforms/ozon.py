@@ -4,7 +4,7 @@ from clients import Firefox
 
 
 class Ozon(Platform):
-    _stalled_text = 'Checking if the site connection is secure'
+    _stalled_text = '<h1>Доступ ограничен</h1>'
     _entities_regex = {
         'https://www.ozon.ru/product/[a-zA-Z0-9-]+?/': OzonProduct
     }
